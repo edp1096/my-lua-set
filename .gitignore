@@ -1,0 +1,10 @@
+/home
+/lua
+/vscode
+/git
+/mingw
+
+/Lua Code.lnk
+
+/playground/*
+!/playground/hello
