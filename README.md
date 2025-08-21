@@ -6,9 +6,9 @@ Scripts for portable Lua toy creation on Windows
 ```
 * Trouble shooting - `ExecutionPolicy` should be set to `RemoteSigned` and unblock `ps1` files
     ```powershell
-    ExecutionPolicy # Check
+    ExecutionPolicy                                     # Check
     Set-ExecutionPolicy -Scope CurrentUser RemoteSigned # Set as RemoteSigned
-    Unblock-File *.ps1 # Unblock ps1 files
+    Unblock-File *.ps1                                  # Unblock ps1 files
     ```
 
 ## Installation scripts
