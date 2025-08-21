@@ -12,7 +12,6 @@ Scripts for portable Lua toy creation on Windows
     Set-ExecutionPolicy -Scope CurrentUser RemoteSigned # Set as RemoteSigned
     Unblock-File *.ps1 # Unblock ps1 files
     ```
-* delete_all.cmd - Delete all installed
 * MinGW
     * install_mingw.ps1 - Install MinGW
 * Lua
@@ -20,6 +19,7 @@ Scripts for portable Lua toy creation on Windows
 * Vscode, Git
     * install_update_vscode_git.ps1 - Install vscode, git. Update vscode
     * run_vscode.cmd - Run vscode
+* delete_all.cmd - Delete all installed
 
 ## Others
 * playground/ - Workspace for Lua practice
