@@ -1,11 +1,11 @@
 Scripts for portable Lua toy creation on Windows
 
-## Run
+## Install
 ```powershell
 .\install_update_all.ps1
 ```
 
-## Scripts
+## Installation scripts
 * `ExecutionPolicy` should be set to `RemoteSigned` and unblock `ps1` files
     ```powershell
     ExecutionPolicy # Check
