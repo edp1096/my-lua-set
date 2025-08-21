@@ -1,2 +1,2 @@
-local greet = "Hello, World!"
+local greet = "Hello world!"
 print(greet)
