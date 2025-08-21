@@ -1,6 +1,6 @@
 Scripts for portable Lua toy creation on Windows
 
-## Install
+## Installation
 ```powershell
 .\install_update_all.ps1
 ```
@@ -11,7 +11,7 @@ Scripts for portable Lua toy creation on Windows
     Unblock-File *.ps1                                  # Unblock ps1 files
     ```
 
-## Installation scripts
+## Scripts for installation
 * MinGW
     * install_mingw.ps1 - Install MinGW
 * Lua
