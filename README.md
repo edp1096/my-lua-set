@@ -4,14 +4,14 @@ Scripts for portable Lua toy creation on Windows
 ```powershell
 .\install_update_all.ps1
 ```
-
-## Installation scripts
-* `ExecutionPolicy` should be set to `RemoteSigned` and unblock `ps1` files
+* Trouble shooting - `ExecutionPolicy` should be set to `RemoteSigned` and unblock `ps1` files
     ```powershell
     ExecutionPolicy # Check
     Set-ExecutionPolicy -Scope CurrentUser RemoteSigned # Set as RemoteSigned
     Unblock-File *.ps1 # Unblock ps1 files
     ```
+
+## Installation scripts
 * MinGW
     * install_mingw.ps1 - Install MinGW
 * Lua
