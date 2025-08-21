@@ -13,7 +13,7 @@ Scripts for portable Lua toy creation on Windows
 
 ## Scripts for installation
 * MinGW
-    * install_mingw.ps1 - Install [MinGW](https://github.com/brechtsanders/winlibs_mingw)
+    * install_mingw.ps1 - Install [MinGW](https://github.com/brechtsanders/winlibs_mingw) UCRT
 * Lua
     * install_lua.ps1 - Install Lua
     * install_luarocks.ps1 - Install LuaRocks
