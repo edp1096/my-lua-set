@@ -27,4 +27,4 @@ Scripts for portable Lua toy creation on Windows
 * my_cmd - Place for custom scripts
 
 ## Note
-* Environment paths - Make HOME, APPDATA, LOCALAPPDATA are changed, see `run_vscode.cmd`
+* Environment paths - Make HOME, APPDATA, LOCALAPPDATA are changed. See `run_vscode.cmd`
