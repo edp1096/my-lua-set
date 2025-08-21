@@ -1,5 +1,14 @@
 $lua_version = "5.4.8"
 
+$mingw_path = Join-Path $PSScriptRoot "mingw"
+if (-not (Test-Path $mingw_path)) {
+    Write-Warning "MinGW folder not found at: $mingw_path"
+    Write-Output "Please ensure MinGW is installed in the mingw directory before running this script."
+
+    pause
+    exit 1
+}
+
 $uri = "https://www.lua.org/download.html"
 $response = Invoke-WebRequest -UseBasicParsing -Uri $uri
 $htmlContent = $response.Content

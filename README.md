@@ -14,9 +14,9 @@ Scripts for portable Lua toy creation on Windows
     ```
 * delete_all.cmd - Delete all installed
 * MinGW
-    * install_update_mingw.ps1 - Install/update MinGW
+    * install_mingw.ps1 - Install MinGW
 * Lua
-    * install_update_lua.ps1 - Install/update Lua
+    * install_lua.ps1 - Install Lua
 * Vscode, Git
     * install_update_vscode_git.ps1 - Install vscode, git. Update vscode
     * run_vscode.cmd - Run vscode
