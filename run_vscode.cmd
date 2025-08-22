@@ -23,7 +23,9 @@ if exist cmake (
     set PATH=%cd%\cmake\bin;%PATH%
 )
 if exist lua (
-    set PATH=%cd%\lua\bin;%PATH%
+    set PATH=%cd%\lua\bin;%cd%\lua\lib;%PATH%
+    set LUA_INCLUDE_DIR=%cd%\lua\include
+    set LUA_LIBRARIES=%cd%\lua\lib
 )
 if exist love2d (
     set PATH=%cd%\love2d;%PATH%

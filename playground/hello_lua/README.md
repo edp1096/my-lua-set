@@ -10,3 +10,10 @@ luac -s -o hello.luac .\main.lua # Strip debug info
 
 lua .\hello.luac
 ```
+
+## srLua
+```powershell
+./srglue.exe ./srlua.exe ./main.lua hello.exe
+./hello
+# Hello world!
+```

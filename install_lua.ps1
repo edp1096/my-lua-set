@@ -37,12 +37,14 @@ mingw32-make PLAT=mingw
 New-Item -Force -ItemType Directory -Path $lua_install_dir | Out-Null
 New-Item -Force -ItemType Directory -Path (Join-Path $lua_install_dir "doc") | Out-Null
 New-Item -Force -ItemType Directory -Path (Join-Path $lua_install_dir "bin") | Out-Null
+New-Item -Force -ItemType Directory -Path (Join-Path $lua_install_dir "lib") | Out-Null
 New-Item -Force -ItemType Directory -Path (Join-Path $lua_install_dir "include") | Out-Null
 
 # Copy files to create binary distribution
 Copy-Item (Join-Path $lua_build_dir "doc\*.*") (Join-Path $lua_install_dir "doc\") -Force
 Copy-Item (Join-Path $lua_build_dir "src\*.exe") (Join-Path $lua_install_dir "bin\") -Force
 Copy-Item (Join-Path $lua_build_dir "src\*.dll") (Join-Path $lua_install_dir "bin\") -Force
+Copy-Item (Join-Path $lua_build_dir "src\*.a") (Join-Path $lua_install_dir "lib\") -Force
 Copy-Item (Join-Path $lua_build_dir "src\luaconf.h") (Join-Path $lua_install_dir "include\") -Force
 Copy-Item (Join-Path $lua_build_dir "src\lua.h") (Join-Path $lua_install_dir "include\") -Force
 Copy-Item (Join-Path $lua_build_dir "src\lualib.h") (Join-Path $lua_install_dir "include\") -Force
