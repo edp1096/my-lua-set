@@ -7,7 +7,7 @@
         "terminalEditor": false,
     },
     "telemetry.telemetryLevel": "off",
-    "editor.fontFamily": "D2Coding ligature, Cascadia Code, Consolas, 'Courier New', monospace",
+    // "editor.fontFamily": "D2Coding ligature, Cascadia Code",
     "editor.fontLigatures": true,
     "editor.fontSize": 16.7,
     "editor.minimap.enabled": false,
