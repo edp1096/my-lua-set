@@ -9,6 +9,7 @@
 /Lua Code.lnk
 
 /playground/*
+!/playground/srlua
 !/playground/hello_lua
 !/playground/hello_love2d
 !/playground/audio_player
