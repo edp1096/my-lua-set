@@ -19,6 +19,9 @@ set PATH=%cd%\git;%cd%\git\cmd;%cd%\git\mingw64\bin;%cd%\git\usr\bin;%PATH%
 if exist mingw (
     set PATH=%cd%\mingw\mingw64\bin;%cd%\mingw\mingw64\x86_64-w64-mingw32\bin;%PATH%
 )
+if exist cmake (
+    set PATH=%cd%\cmake\bin;%PATH%
+)
 if exist lua (
     set PATH=%cd%\lua\bin;%PATH%
 )

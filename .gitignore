@@ -3,8 +3,10 @@
 /vscode
 /git
 /mingw
+/cmake
 
 /Lua Code.lnk
 
 /playground/*
-!/playground/hello
+!/playground/hello_lua
+!/playground/hello_love2d
