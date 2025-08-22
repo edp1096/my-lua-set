@@ -42,6 +42,7 @@ if ($workingMode -eq "update") {
     exit
 }
 
+<# Add webfont #>
 $workbenchDesktopMainCSS=".\vscode\resources\app\out\vs\workbench\workbench.desktop.main.css"
 $appendContent="`
 @font-face{ font-family: 'D2Coding ligature'; src: url('https://cdn.jsdelivr.net/gh/joungkyun/font-d2coding-ligature/D2Coding-ligature.eot?#iefix') format('embedded-opentype'),`
@@ -57,7 +58,9 @@ cd vscode
 $env:NODE_NO_WARNINGS = 1
 bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension vscode-icons-team.vscode-icons
 bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension sumneko.lua
+bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension ilich8086.launcher
 $env:NODE_NO_WARNINGS = 0
 cd ..
 
-# .\vscode_checksum_fix.ps1
+# Fix vscode checksum for webfont
+.\fix_vscode_checksum.ps1

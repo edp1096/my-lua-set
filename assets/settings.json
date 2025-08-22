@@ -61,9 +61,13 @@
     "git.confirmSync": false,
     "git.autofetch": true,
     "git.openRepositoryInParentFolders": "never",
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
-        "--line-length",
-        "144"
+    "window.commandCenter": false,
+    "launcher.commands": [
+        {
+            "description": "Run Love2d",
+            "executable": "love.exe",
+            "parameters": ".",
+            "startIn": "%workspace%"
+        },
     ]
 }

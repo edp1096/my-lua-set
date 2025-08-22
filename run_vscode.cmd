@@ -25,6 +25,9 @@ if exist cmake (
 if exist lua (
     set PATH=%cd%\lua\bin;%PATH%
 )
+if exist love2d (
+    set PATH=%cd%\love2d;%PATH%
+)
 
 @REM %SystemRoot%\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden "vscode\bin\code.cmd --reuse-window --extensions-dir vscode/data/extension --user-data-dir vscode/data/user-data"
 echo Set WshShell = CreateObject("WScript.Shell") > temp.vbs

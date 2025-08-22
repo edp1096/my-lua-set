@@ -26,5 +26,8 @@ tar -xf cmake.zip -C .
 
 # rename-item "cmake-$version-windows-x86_64" "cmake"
 copy -force -recurse -path "cmake-$version-windows-x86_64\*" "cmake"
+
+sleep 3
+
 remove-item -force -ea 0 -recurse "cmake-$version-windows-x86_64" | out-null
 remove-item -force cmake.zip
