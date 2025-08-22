@@ -1,4 +1,4 @@
-Scripts for portable Lua toy creation on Windows
+Scripts for portable Lua working set creation on Windows
 
 ## Installation
 ```powershell
