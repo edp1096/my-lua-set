@@ -7,7 +7,6 @@ url('https://cdn.jsdelivr.net/gh/joungkyun/font-d2coding-ligature/D2Coding-ligat
 }`
 @import url('http://fonts.cdnfonts.com/css/cascadia-code');"
 
-# 방법 1: 특정 문자열로 확인 (추천)
 if (-not (Get-Content $workbenchDesktopMainCSS | Select-String "D2Coding ligature")) {
     Add-Content -path $workbenchDesktopMainCSS -value $appendContent
 }
