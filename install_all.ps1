@@ -6,7 +6,8 @@ write-output "vscode, git" ; .\install_update_vscode_git.ps1
 write-output "CMake" ; .\install_cmake.ps1
 write-output "Love2D" ; .\install_love2d.ps1
 
-write-output "Add webfont for vscode" ; .\webfont_add_to_vscode.ps1
-write-output "Fix checksum of vscode for webfont" ; .\webfont_fix_vscode_checksum.ps1
+<# Webfont - not work so not use #>
+# write-output "Add webfont for vscode" ; .\webfont_add_to_vscode.ps1
+# write-output "Fix checksum of vscode for webfont" ; .\webfont_fix_vscode_checksum.ps1
 
 pause
