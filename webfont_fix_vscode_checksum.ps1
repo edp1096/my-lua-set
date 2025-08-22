@@ -9,6 +9,5 @@ $checksum = $base64.replace("=","")
 $json = (Get-Content "vscode\resources\app\product.json" -Encoding UTF8 | Out-String)
 $product = ConvertFrom-Json $json
 
-
 $product.checksums.'vs/workbench/workbench.desktop.main.css' = $checksum
 $product | ConvertTo-Json -Compress -Depth 10 | Out-File "vscode\resources\app\product.json" -Encoding UTF8
