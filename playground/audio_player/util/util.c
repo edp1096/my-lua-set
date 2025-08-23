@@ -25,6 +25,8 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <sys/select.h>
+#include <time.h>      // clock_gettime용
+#include <sched.h>     // sched_yield용
 #endif
 
 // 초 단위 sleep
@@ -100,8 +102,48 @@ static int l_getch(lua_State* L) {
         lua_pushinteger(L, ch);
     }
 #else
-    int ch = getchar();
-    lua_pushinteger(L, ch);
+    struct termios oldt, newt;
+    int ch;
+    
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    
+    ch = getchar();
+    
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    
+    if (ch == 27) {  // ESC 시퀀스 확인
+        fd_set fds;
+        struct timeval tv;
+        
+        FD_ZERO(&fds);
+        FD_SET(STDIN_FILENO, &fds);
+        tv.tv_sec = 0;
+        tv.tv_usec = 100000;  // 100ms timeout
+        
+        if (select(STDIN_FILENO + 1, &fds, NULL, NULL, &tv) > 0) {
+            int ch2 = getchar();
+            if (ch2 == '[') {
+                int ch3 = getchar();
+                // 화살표 키 등을 1000번대로 변환
+                switch (ch3) {
+                    case 'A': lua_pushinteger(L, 1072); break;  // Up
+                    case 'B': lua_pushinteger(L, 1080); break;  // Down  
+                    case 'C': lua_pushinteger(L, 1077); break;  // Right
+                    case 'D': lua_pushinteger(L, 1075); break;  // Left
+                    default: lua_pushinteger(L, ch); break;
+                }
+            } else {
+                lua_pushinteger(L, ch);
+            }
+        } else {
+            lua_pushinteger(L, ch);
+        }
+    } else {
+        lua_pushinteger(L, ch);
+    }
 #endif
     return 1;
 }
@@ -109,9 +151,11 @@ static int l_getch(lua_State* L) {
 // 화면 지우기
 static int l_cls(lua_State* L) {
 #ifdef _WIN32
-    system("cls");
+    int ret = system("cls");
+    (void)ret;  // 반환값 사용하지 않음을 명시
 #else
-    system("clear");
+    int ret = system("clear");
+    (void)ret;  // 반환값 사용하지 않음을 명시
 #endif
     return 0;
 }
@@ -124,7 +168,10 @@ static int l_beep(lua_State* L) {
 #ifdef _WIN32
     Beep(frequency, duration);
 #else
-    printf("\a");  // 시스템 벨
+    // Linux에서는 단순히 시스템 벨 사용 (frequency, duration 무시)
+    (void)frequency;  // 경고 방지
+    (void)duration;   // 경고 방지
+    printf("\a");     // 시스템 벨
     fflush(stdout);
 #endif
     
@@ -137,8 +184,12 @@ static int l_tick(lua_State* L) {
     lua_pushinteger(L, GetTickCount());
 #else
     struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    lua_pushinteger(L, ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
+        long long ms = (long long)ts.tv_sec * 1000LL + ts.tv_nsec / 1000000LL;
+        lua_pushinteger(L, ms);
+    } else {
+        lua_pushinteger(L, 0);
+    }
 #endif
     return 1;
 }
@@ -183,7 +234,10 @@ static const luaL_Reg utillib[] = {
 };
 
 // 모듈 초기화 함수
-__declspec(dllexport) int luaopen_util(lua_State* L) {
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+int luaopen_util(lua_State* L) {
     // util 모듈 테이블 생성
     luaL_newlib(L, utillib);
     
