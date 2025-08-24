@@ -1,4 +1,5 @@
-.PHONY: all clean test help
+.PHONY: build clean test help
+
 ifeq ($(OS),Windows_NT)
     CC = gcc
     EXT = .dll
@@ -8,7 +9,6 @@ ifeq ($(OS),Windows_NT)
     LUA_INCLUDE = -I../../lua/include
     LUA_LIB = -L../../lua/lib -llua
     AUDIO_LIBS = -lwinmm -lole32
-    UTIL_LIBS = -lwinmm
     LOADER_LIBS = -lm
 else
     CC = gcc
@@ -39,48 +39,41 @@ else
     endif
     
     AUDIO_LIBS = -lasound -lpthread -ldl -lm
-    UTIL_LIBS = 
     LOADER_LIBS = -lm
 endif
 
 AUDIO_TARGET = audio$(EXT)
-UTIL_TARGET = util$(EXT)
 LOADER_TARGET = lua_loader$(EXT_BIN)
 
-all: $(AUDIO_TARGET) $(UTIL_TARGET) $(LOADER_TARGET)
+build: $(AUDIO_TARGET) $(LOADER_TARGET)
 
-$(AUDIO_TARGET): audio/audio.c audio/stb_vorbis.c
-	$(CC) $(CFLAGS) $(LUA_INCLUDE) -o $(AUDIO_TARGET) audio/audio.c audio/stb_vorbis.c $(LUA_LIB) $(AUDIO_LIBS)
-
-$(UTIL_TARGET): util/util.c
-	$(CC) $(CFLAGS) $(LUA_INCLUDE) -o $(UTIL_TARGET) util/util.c $(LUA_LIB) $(UTIL_LIBS)
+$(AUDIO_TARGET): audio/audio.c audio/stb_vorbis.c audio/util.c
+	$(CC) $(CFLAGS) $(LUA_INCLUDE) -o $(AUDIO_TARGET) audio/audio.c audio/stb_vorbis.c audio/util.c $(LUA_LIB) $(AUDIO_LIBS)
 
 $(LOADER_TARGET): loader/main.c
 	$(CC) $(LUA_INCLUDE) -o $(LOADER_TARGET) loader/main.c $(LUA_LIB) $(LOADER_LIBS)
 
 
-dist:
+dist: build
 	mkdir dist
 ifeq ($(OS),Windows_NT)
 	copy $(AUDIO_TARGET) dist
-	copy $(UTIL_TARGET) dist
 	copy $(LOADER_TARGET) dist
-	copy *.lua dist
+	copy player_full.lua dist
 else
 	cp $(AUDIO_TARGET) dist
-	cp $(UTIL_TARGET) dist
 	cp $(LOADER_TARGET) dist
-	cp *.lua dist
+	cp player_full.lua dist
 endif
 
 clean:
 ifeq ($(OS),Windows_NT)
 	-$(RM) *.dll 2>nul
 	-$(RM) lua_loader.exe 2>nul
-	-$(RM) dist 2>nul
-	rmdir dist 2>nul
+# 	-$(RM) dist 2>nul
+# 	rmdir dist 2>nul
 else
 	-$(RM) *.so
 	-$(RM) lua_loader
-	-$(RM) dist
+# 	-$(RM) dist
 endif

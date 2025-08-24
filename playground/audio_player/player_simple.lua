@@ -1,7 +1,6 @@
 -- simple_player.lua - 원래 코드 스타일 + util.dll
 
 local audio = require("audio")
-local util = require("util")
 
 print("Simple Audio Test")
 
@@ -24,13 +23,13 @@ print("Playing... Press Enter to stop")
 
 -- 기존 io.read() 대신 non-blocking 버전
 while sound:isPlaying() do
-    if util.kbhit() then
-        local key = util.getch()
-        if key == util.KEY.ENTER then
+    if audio.kbhit() then
+        local key = audio.getch()
+        if key == audio.KEY.ENTER then
             break  -- 엔터 누르면 정지
         end
     end
-    util.msleep(100)  -- 0.1초마다 체크
+    audio.msleep(100)  -- 0.1초마다 체크
 end
 
 -- 결과 처리

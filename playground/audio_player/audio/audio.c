@@ -23,6 +23,17 @@
 #include "lua.h"
 #include "miniaudio.h"
 
+// util.c 함수들 extern 선언
+extern int l_sleep(lua_State* L);
+extern int l_msleep(lua_State* L);
+extern int l_kbhit(lua_State* L);
+extern int l_getch(lua_State* L);
+extern int l_cls(lua_State* L);
+extern int l_beep(lua_State* L);
+extern int l_tick(lua_State* L);
+extern int l_yield(lua_State* L);
+extern void create_key_constants(lua_State* L);
+
 // 전역 오디오 엔진
 static ma_engine* g_engine = NULL;
 static int g_initialized = 0;
@@ -227,13 +238,26 @@ static int l_sound_tostring(lua_State* L) {
     return 1;
 }
 
-// 오디오 모듈 함수들
+// 오디오 모듈 함수들 (audio와 util 함수 모두 포함)
 static const luaL_Reg audiolib[] = {
+    // Audio 함수들
     {"init", l_audio_init},
     {"shutdown", l_audio_shutdown},
     {"load", l_audio_load},
     {"playFile", l_audio_play_file},
-    {NULL, NULL}};
+    
+    // Util 함수들 (util.c에서 가져옴)
+    {"sleep", l_sleep},
+    {"msleep", l_msleep},
+    {"kbhit", l_kbhit},
+    {"getch", l_getch},
+    {"cls", l_cls},
+    {"beep", l_beep},
+    {"tick", l_tick},
+    {"yield", l_yield},
+    
+    {NULL, NULL}
+};
 
 // LuaSound 메타메서드들
 static const luaL_Reg sound_meta[] = {
@@ -260,8 +284,15 @@ int luaopen_audio(lua_State* L) {
     luaL_setfuncs(L, sound_meta, 0);
     lua_pop(L, 1);
 
-    // 오디오 모듈 테이블 생성
+    // 오디오 모듈 테이블 생성 (util 함수들도 포함)
     luaL_newlib(L, audiolib);
+    
+    // 키 상수 추가 (util.c에서 가져옴)
+    create_key_constants(L);
+    
+    // 버전 정보
+    lua_pushstring(L, "1.0");
+    lua_setfield(L, -2, "version");
 
     return 1;
 }

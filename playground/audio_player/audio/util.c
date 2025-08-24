@@ -1,7 +1,5 @@
 /*
- * util.c - 시스템 유틸리티 DLL for Lua
- * 
- * 컴파일: gcc -shared -o util.dll util.c -I"lua/include" -L"lua/lib" -llua -lwinmm
+ * util.c - 시스템 유틸리티 함수들 (audio 모듈에서 사용)
  * 
  * 기능:
  * - sleep(seconds)
@@ -30,7 +28,7 @@
 #endif
 
 // 초 단위 sleep
-static int l_sleep(lua_State* L) {
+int l_sleep(lua_State* L) {
     double seconds = luaL_checknumber(L, 1);
     
 #ifdef _WIN32
@@ -43,7 +41,7 @@ static int l_sleep(lua_State* L) {
 }
 
 // 밀리초 단위 sleep
-static int l_msleep(lua_State* L) {
+int l_msleep(lua_State* L) {
     int milliseconds = luaL_checkinteger(L, 1);
     
 #ifdef _WIN32
@@ -56,7 +54,7 @@ static int l_msleep(lua_State* L) {
 }
 
 // 키 입력 감지 (non-blocking)
-static int l_kbhit(lua_State* L) {
+int l_kbhit(lua_State* L) {
 #ifdef _WIN32
     lua_pushboolean(L, _kbhit());
 #else
@@ -88,7 +86,7 @@ static int l_kbhit(lua_State* L) {
 }
 
 // 키 입력 받기 (extended key 지원)
-static int l_getch(lua_State* L) {
+int l_getch(lua_State* L) {
 #ifdef _WIN32
     int ch = _getch();
     
@@ -149,7 +147,7 @@ static int l_getch(lua_State* L) {
 }
 
 // 화면 지우기
-static int l_cls(lua_State* L) {
+int l_cls(lua_State* L) {
 #ifdef _WIN32
     int ret = system("cls");
     (void)ret;  // 반환값 사용하지 않음을 명시
@@ -161,7 +159,7 @@ static int l_cls(lua_State* L) {
 }
 
 // 비프음
-static int l_beep(lua_State* L) {
+int l_beep(lua_State* L) {
     int frequency = luaL_optinteger(L, 1, 800);    // 기본 800Hz
     int duration = luaL_optinteger(L, 2, 200);     // 기본 200ms
     
@@ -179,7 +177,7 @@ static int l_beep(lua_State* L) {
 }
 
 // 현재 시간 (밀리초)
-static int l_tick(lua_State* L) {
+int l_tick(lua_State* L) {
 #ifdef _WIN32
     lua_pushinteger(L, GetTickCount());
 #else
@@ -195,7 +193,7 @@ static int l_tick(lua_State* L) {
 }
 
 // CPU 사용량 최소화 대기
-static int l_yield(lua_State* L) {
+int l_yield(lua_State* L) {
 #ifdef _WIN32
     Sleep(0);  // 다른 스레드에게 시간 양보
 #else
@@ -205,7 +203,7 @@ static int l_yield(lua_State* L) {
 }
 
 // 키 코드 상수 테이블
-static void create_key_constants(lua_State* L) {
+void create_key_constants(lua_State* L) {
     lua_newtable(L);
     
     // 일반적인 키 코드들
@@ -218,35 +216,4 @@ static void create_key_constants(lua_State* L) {
     lua_pushinteger(L, 61);  lua_setfield(L, -2, "EQUAL");
     
     lua_setfield(L, -2, "KEY");
-}
-
-// 함수 테이블
-static const luaL_Reg utillib[] = {
-    {"sleep", l_sleep},
-    {"msleep", l_msleep},
-    {"kbhit", l_kbhit},
-    {"getch", l_getch},
-    {"cls", l_cls},
-    {"beep", l_beep},
-    {"tick", l_tick},
-    {"yield", l_yield},
-    {NULL, NULL}
-};
-
-// 모듈 초기화 함수
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-int luaopen_util(lua_State* L) {
-    // util 모듈 테이블 생성
-    luaL_newlib(L, utillib);
-    
-    // 키 상수 추가
-    create_key_constants(L);
-    
-    // 버전 정보
-    lua_pushstring(L, "1.0");
-    lua_setfield(L, -2, "version");
-    
-    return 1;
 }
