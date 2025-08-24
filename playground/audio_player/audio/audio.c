@@ -34,6 +34,11 @@ extern int l_tick(lua_State* L);
 extern int l_yield(lua_State* L);
 extern void create_key_constants(lua_State* L);
 
+// 파일시스템 함수들
+extern int l_scan_music_files(lua_State* L);
+extern int l_file_exists(lua_State* L);
+extern int l_dir_exists(lua_State* L);
+
 // 전역 오디오 엔진
 static ma_engine* g_engine = NULL;
 static int g_initialized = 0;
@@ -245,7 +250,7 @@ static const luaL_Reg audiolib[] = {
     {"shutdown", l_audio_shutdown},
     {"load", l_audio_load},
     {"playFile", l_audio_play_file},
-    
+
     // Util 함수들 (util.c에서 가져옴)
     {"sleep", l_sleep},
     {"msleep", l_msleep},
@@ -255,9 +260,13 @@ static const luaL_Reg audiolib[] = {
     {"beep", l_beep},
     {"tick", l_tick},
     {"yield", l_yield},
-    
-    {NULL, NULL}
-};
+
+    // 파일시스템 함수들
+    {"scanMusicFiles", l_scan_music_files},  // 음악 파일 스캔
+    {"fileExists", l_file_exists},           // 파일 존재 확인
+    {"dirExists", l_dir_exists},             // 디렉토리 존재 확인
+
+    {NULL, NULL}};
 
 // LuaSound 메타메서드들
 static const luaL_Reg sound_meta[] = {
@@ -276,7 +285,8 @@ static const luaL_Reg sound_meta[] = {
 __declspec(dllexport)
 #endif
 #endif
-int luaopen_audio(lua_State* L) {
+int
+luaopen_audio(lua_State* L) {
     // LuaSound 메타테이블 생성
     luaL_newmetatable(L, "LuaSound");
     lua_pushvalue(L, -1);
@@ -286,10 +296,10 @@ int luaopen_audio(lua_State* L) {
 
     // 오디오 모듈 테이블 생성 (util 함수들도 포함)
     luaL_newlib(L, audiolib);
-    
+
     // 키 상수 추가 (util.c에서 가져옴)
     create_key_constants(L);
-    
+
     // 버전 정보
     lua_pushstring(L, "1.0");
     lua_setfield(L, -2, "version");

@@ -8,16 +8,22 @@
  * - getch() - 키 입력 받기
  * - cls() - 화면 지우기
  * - beep() - 비프음
+ * - scanMusicFiles() - 음악 파일 스캔
+ * - fileExists() - 파일 존재 확인
+ * - dirExists() - 디렉토리 존재 확인
  */
 
 #include "lua.h"
 #include "lauxlib.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef _WIN32
 #include <windows.h>
 #include <conio.h>
+#include <io.h>
+#include <fcntl.h>
 #else
 #include <unistd.h>
 #include <termios.h>
@@ -25,6 +31,61 @@
 #include <sys/select.h>
 #include <time.h>      // clock_gettime용
 #include <sched.h>     // sched_yield용
+#include <dirent.h>
+#include <sys/stat.h>
+#include <strings.h>   // strcasecmp용
+#endif
+
+// 크로스플랫폼 대소문자 무관 문자열 비교
+static int stricmp_cross(const char* s1, const char* s2) {
+#ifdef _WIN32
+    return _stricmp(s1, s2);
+#else
+    return strcasecmp(s1, s2);
+#endif
+}
+
+// 파일 확장자 확인 함수
+static int has_music_extension(const char* filename) {
+    const char* ext = strrchr(filename, '.');
+    if (!ext) return 0;
+    
+    return (stricmp_cross(ext, ".mp3") == 0 ||
+            stricmp_cross(ext, ".wav") == 0 ||
+            stricmp_cross(ext, ".ogg") == 0 ||
+            stricmp_cross(ext, ".flac") == 0);
+            // stricmp_cross(ext, ".m4a") == 0 ||
+            // stricmp_cross(ext, ".aac") == 0);
+}
+
+#ifdef _WIN32
+// UTF-16을 UTF-8로 변환하는 함수
+static char* utf16_to_utf8(const wchar_t* wstr) {
+    if (!wstr) return NULL;
+    
+    int len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+    if (len <= 0) return NULL;
+    
+    char* utf8str = malloc(len);
+    if (!utf8str) return NULL;
+    
+    WideCharToMultiByte(CP_UTF8, 0, wstr, -1, utf8str, len, NULL, NULL);
+    return utf8str;
+}
+
+// UTF-8을 UTF-16으로 변환하는 함수  
+static wchar_t* utf8_to_utf16(const char* str) {
+    if (!str) return NULL;
+    
+    int len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
+    if (len <= 0) return NULL;
+    
+    wchar_t* wstr = malloc(len * sizeof(wchar_t));
+    if (!wstr) return NULL;
+    
+    MultiByteToWideChar(CP_UTF8, 0, str, -1, wstr, len);
+    return wstr;
+}
 #endif
 
 // 초 단위 sleep
@@ -200,6 +261,165 @@ int l_yield(lua_State* L) {
     sched_yield();
 #endif
     return 0;
+}
+
+// 디렉토리에서 음악 파일 목록을 가져와서 Lua 테이블로 반환
+int l_scan_music_files(lua_State* L) {
+    const char* directory = luaL_checkstring(L, 1);
+    
+    lua_newtable(L);  // 결과 테이블 생성
+    int index = 1;
+    
+#ifdef _WIN32
+    // 윈도우: FindFirstFile/FindNextFile 사용
+    WIN32_FIND_DATAW findData;
+    HANDLE hFind;
+    
+    // 검색 패턴 생성 (directory\*.*)
+    size_t pathLen = strlen(directory);
+    char* searchPath = malloc(pathLen + 10);
+    if (!searchPath) {
+        lua_pushnil(L);
+        lua_pushstring(L, "Memory allocation failed");
+        return 2;
+    }
+    sprintf(searchPath, "%s\\*.*", directory);
+    
+    // UTF-8을 UTF-16으로 변환
+    wchar_t* wSearchPath = utf8_to_utf16(searchPath);
+    free(searchPath);
+    
+    if (!wSearchPath) {
+        lua_pushnil(L);
+        lua_pushstring(L, "Path encoding conversion failed");
+        return 2;
+    }
+    
+    hFind = FindFirstFileW(wSearchPath, &findData);
+    free(wSearchPath);
+    
+    if (hFind == INVALID_HANDLE_VALUE) {
+        lua_pushnil(L);
+        lua_pushstring(L, "Directory not found or access denied");
+        return 2;
+    }
+    
+    do {
+        // 디렉토리는 건너뛰기
+        if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            continue;
+        }
+        
+        // UTF-16을 UTF-8로 변환
+        char* filename = utf16_to_utf8(findData.cFileName);
+        if (!filename) continue;
+        
+        // 음악 파일 확장자 확인
+        if (has_music_extension(filename)) {
+            // 전체 경로 생성
+            size_t fullPathLen = strlen(directory) + strlen(filename) + 2;
+            char* fullPath = malloc(fullPathLen);
+            if (fullPath) {
+                sprintf(fullPath, "%s\\%s", directory, filename);
+                
+                // Lua 테이블에 추가
+                lua_pushstring(L, fullPath);
+                lua_rawseti(L, -2, index++);
+                
+                free(fullPath);
+            }
+        }
+        
+        free(filename);
+    } while (FindNextFileW(hFind, &findData));
+    
+    FindClose(hFind);
+    
+#else
+    // 리눅스/Unix: opendir/readdir 사용
+    DIR* dir = opendir(directory);
+    if (!dir) {
+        lua_pushnil(L);
+        lua_pushstring(L, "Directory not found or access denied");
+        return 2;
+    }
+    
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL) {
+        // 숨김 파일과 디렉토리 건너뛰기
+        if (entry->d_name[0] == '.') continue;
+        
+        // 전체 경로로 stat 확인
+        char fullPath[1024];
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", directory, entry->d_name);
+        
+        struct stat statbuf;
+        if (stat(fullPath, &statbuf) != 0) continue;
+        
+        // 디렉토리는 건너뛰기
+        if (S_ISDIR(statbuf.st_mode)) continue;
+        
+        // 음악 파일 확인
+        if (has_music_extension(entry->d_name)) {
+            lua_pushstring(L, fullPath);
+            lua_rawseti(L, -2, index++);
+        }
+    }
+    
+    closedir(dir);
+#endif
+    
+    return 1;  // 테이블 반환
+}
+
+// 단일 파일 존재 확인
+int l_file_exists(lua_State* L) {
+    const char* filename = luaL_checkstring(L, 1);
+    
+#ifdef _WIN32
+    wchar_t* wFilename = utf8_to_utf16(filename);
+    if (!wFilename) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    
+    DWORD attrs = GetFileAttributesW(wFilename);
+    free(wFilename);
+    
+    lua_pushboolean(L, attrs != INVALID_FILE_ATTRIBUTES && 
+                       !(attrs & FILE_ATTRIBUTE_DIRECTORY));
+#else
+    struct stat statbuf;
+    int exists = (stat(filename, &statbuf) == 0 && S_ISREG(statbuf.st_mode));
+    lua_pushboolean(L, exists);
+#endif
+    
+    return 1;
+}
+
+// 디렉토리 존재 확인
+int l_dir_exists(lua_State* L) {
+    const char* dirname = luaL_checkstring(L, 1);
+    
+#ifdef _WIN32
+    wchar_t* wDirname = utf8_to_utf16(dirname);
+    if (!wDirname) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    
+    DWORD attrs = GetFileAttributesW(wDirname);
+    free(wDirname);
+    
+    lua_pushboolean(L, attrs != INVALID_FILE_ATTRIBUTES && 
+                       (attrs & FILE_ATTRIBUTE_DIRECTORY));
+#else
+    struct stat statbuf;
+    int exists = (stat(dirname, &statbuf) == 0 && S_ISDIR(statbuf.st_mode));
+    lua_pushboolean(L, exists);
+#endif
+    
+    return 1;
 }
 
 // 키 코드 상수 테이블
