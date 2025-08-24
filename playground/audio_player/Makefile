@@ -1,7 +1,9 @@
 .PHONY: build clean test help
 
+CC = gcc
+LOADER_LIBS = -lm
+
 ifeq ($(OS),Windows_NT)
-    CC = gcc
     EXT = .dll
     EXT_BIN = .exe
     RM = del /Q
@@ -9,9 +11,7 @@ ifeq ($(OS),Windows_NT)
     LUA_INCLUDE = -I../../lua/include
     LUA_LIB = -L../../lua/lib -llua
     AUDIO_LIBS = -lwinmm -lole32
-    LOADER_LIBS = -lm
 else
-    CC = gcc
     EXT = .so
     EXT_BIN =
     RM = rm -f
@@ -39,7 +39,6 @@ else
     endif
     
     AUDIO_LIBS = -lasound -lpthread -ldl -lm
-    LOADER_LIBS = -lm
 endif
 
 AUDIO_TARGET = audio$(EXT)

@@ -4,7 +4,7 @@ local audio = require("audio")
 
 print("Simple Audio Test")
 
-local fname = "music/guitar.flac"
+local fname = "music/guitar.mp3"
 
 audio.init()
 
