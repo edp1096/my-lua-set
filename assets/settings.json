@@ -69,5 +69,11 @@
             "parameters": ".",
             "startIn": "%workspace%"
         },
+        {
+            "description": "Run Defold",
+            "executable": "defold.exe",
+            "parameters": ".",
+            "startIn": "%workspace%"
+        },
     ]
 }
