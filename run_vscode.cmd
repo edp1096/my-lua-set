@@ -22,6 +22,9 @@ if exist mingw (
 if exist cmake (
     set PATH=%cd%\cmake\bin;%PATH%
 )
+if exist xmake (
+    set PATH=%cd%\xmake;%PATH%
+)
 if exist lua (
     set PATH=%cd%\lua\bin;%cd%\lua\lib;%PATH%
     set LUA_INCLUDE_DIR=%cd%\lua\include
@@ -29,6 +32,9 @@ if exist lua (
 )
 if exist love2d (
     set PATH=%cd%\love2d;%PATH%
+)
+if exist defold (
+    set PATH=%cd%\defold;%PATH%
 )
 
 @REM %SystemRoot%\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden "vscode\bin\code.cmd --reuse-window --extensions-dir vscode/data/extension --user-data-dir vscode/data/user-data"

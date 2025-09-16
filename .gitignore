@@ -1,9 +1,11 @@
 /home
 /lua
 /love2d
+/defold
 /git
 /mingw
 /cmake
+/xmake
 /vscode
 
 /Lua Code.lnk
@@ -13,3 +15,5 @@
 !/playground/hello_lua
 !/playground/hello_love2d
 !/playground/audio_player
+
+sed.exe
