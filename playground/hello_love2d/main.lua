@@ -1,4 +1,7 @@
-local font, gameTitle, x, y, time
+local font, gameTitle, x, y, circle_x, circle_speed
+
+require("input")
+
 
 function love.load()
     love.graphics.setBackgroundColor(0.1, 0.1, 0.2)
@@ -9,38 +12,28 @@ function love.load()
     gameTitle = "Hello World!"
     x = 400
     y = 275
-    time = 0
+
+    circle_x = 0
+    circle_speed = 100
 end
 
 function love.update(dt)
-    time = time + dt
-    -- x = 325 + math.sin(love.timer.getTime() * 2.5) * 75
-    x = 300 + math.sin(time * 2.5) * 75
+    x = 300 + math.sin(love.timer.getTime() * 2.5) * 75
+
+    circle_x = circle_x + circle_speed * dt
+    if circle_x > love.graphics.getWidth() then
+        circle_x = 0
+    end
 end
 
 function love.draw()
     love.graphics.print(gameTitle, x, y)
+    love.graphics.circle("line", circle_x, 100, 10)
     love.graphics.print("FPS: " .. love.timer.getFPS(), 10, 10)
-    love.graphics.print("Press ESC to quit", 10, love.graphics.getHeight() - 30)
+    love.graphics.print("Press ESC to quit", 10, love.graphics.getHeight() - 50)
 end
-
-function love.keypressed(key)
-    if key == "escape" then
-        love.event.quit()
-    end
-end
-
-function love.keyreleased(key) end
-
-function love.mousepressed(mx, my, button, istouch, presses)
-    if button == 1 then
-        print("Mouse clicked at: " .. mx .. ", " .. my)
-    end
-end
-
-function love.mousereleased(mx, my, button, istouch, presses) end
 
 function love.quit()
-    print("Thanks for playing!")
+    print("Quit the game")
     return false
 end
