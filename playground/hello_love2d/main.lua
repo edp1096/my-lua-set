@@ -3,7 +3,7 @@ local font, gameTitle, x, y, time
 function love.load()
     love.graphics.setBackgroundColor(0.1, 0.1, 0.2)
 
-    font = love.graphics.newFont(24)
+    font = love.graphics.newFont(36)
     love.graphics.setFont(font)
 
     gameTitle = "Hello World!"
@@ -15,7 +15,7 @@ end
 function love.update(dt)
     time = time + dt
     -- x = 325 + math.sin(love.timer.getTime() * 2.5) * 75
-    x = 325 + math.sin(time * 2.5) * 75
+    x = 300 + math.sin(time * 2.5) * 75
 end
 
 function love.draw()
