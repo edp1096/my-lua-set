@@ -20,6 +20,8 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
 * Lua
     * install_lua.ps1 - Install Lua
     * install_luarocks.ps1 - Install LuaRocks
+    * install_love2d.ps1 - Install Love2D
+    * install_defold.ps1 - Install Defold
 * Vscode, Git
     * install_update_vscode_git.ps1 - Install vscode, git. Update vscode
     * run_vscode.cmd - Run vscode
