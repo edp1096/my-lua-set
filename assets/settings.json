@@ -70,6 +70,17 @@
             "startIn": "%workspace%"
         },
         {
+            "description": "Run Love2d at src",
+            "executable": "love.exe",
+            "parameters": "src",
+            "startIn": "%workspace%"
+        },
+        {
+            "description": "Run Tiled",
+            "executable": "tiled.exe",
+            "startIn": "%workspace%"
+        },
+        {
             "description": "Run Defold",
             "executable": "defold.exe",
             "startIn": "%workspace%"
