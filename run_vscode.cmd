@@ -36,6 +36,9 @@ if exist love2d (
 if exist defold (
     set PATH=%cd%\defold;%PATH%
 )
+if exist solar2d (
+    set PATH=%cd%\solar2d;%PATH%
+)
 if exist tiled (
     set PATH=%cd%\tiled;%PATH%
 )
