@@ -42,6 +42,13 @@ if exist solar2d (
 if exist tiled (
     set PATH=%cd%\tiled;%PATH%
 )
+if exist aseprite (
+    set PATH=%cd%\aseprite;%PATH%
+)
+if exist libresprite (
+    set PATH=%cd%\libresprite;%PATH%
+)
+
 
 @REM %SystemRoot%\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden "vscode\bin\code.cmd --reuse-window --extensions-dir vscode/data/extension --user-data-dir vscode/data/user-data"
 echo Set WshShell = CreateObject("WScript.Shell") > temp.vbs

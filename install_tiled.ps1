@@ -6,7 +6,7 @@ Write-Host "Fetching latest release information..."
 $releaseInfo = Invoke-RestMethod -Uri $repoURL
 
 # Find Windows x86_64 ZIP file
-$asset = $releaseInfo.assets | Where-Object { $_.name -like "*Windows_x86_64.zip" }
+$asset = $releaseInfo.assets | Where-Object { $_.name -like "*Windows-10+_x86_64.zip" }
 
 if (-not $asset) {
     Write-Error "Could not find Windows x86_64 ZIP file in latest release"
