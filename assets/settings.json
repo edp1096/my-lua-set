@@ -84,6 +84,16 @@
             "description": "Run Defold",
             "executable": "defold.exe",
             "startIn": "%workspace%"
+        },
+        {
+            "description": "Run Aseprite",
+            "executable": "aseprite.exe",
+            "startIn": "%workspace%"
+        },
+        {
+            "description": "Run Libreprite",
+            "executable": "libresprite.exe",
+            "startIn": "%workspace%"
         }
     ]
 }

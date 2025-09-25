@@ -22,6 +22,7 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
     * install_luarocks.ps1 - Install LuaRocks
     * install_love2d.ps1 - Install Love2D
     * install_defold.ps1 - Install Defold
+    * install_libresprite.ps1 - Install LibreSprite
 * Vscode, Git
     * install_update_vscode_git.ps1 - Install vscode, git. Update vscode
     * run_vscode.cmd - Run vscode
@@ -33,3 +34,4 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
 
 ## Note
 * Environment paths - vscode runs with the environment variables changed. See `run_vscode.cmd`
+* After vscode run, press `Shift+F2` for tool execution.
