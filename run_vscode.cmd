@@ -46,6 +46,9 @@ if exist solar2d (
 if exist tiled (
     set PATH=%cd%\tiled;%PATH%
 )
+if exist resource_hacker (
+    set PATH=%cd%\resource_hacker;%PATH%
+)
 if exist aseprite (
     set PATH=%cd%\aseprite;%PATH%
 )

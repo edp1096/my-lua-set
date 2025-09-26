@@ -72,7 +72,12 @@
         {
             "description": "Pack current Love2D game to dist",
             "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-            "parameters": "pack_love2d_game.ps1",
+            "parameters": "pack_love2d_game.ps1 -GameName \"(Split-Path -Leaf '%workspace%')\"",
+            "startIn": "%workspace%"
+        },
+        {
+            "description": "Run ResourceHacker",
+            "executable": "ResourceHacker.exe",
             "startIn": "%workspace%"
         },
         {

@@ -11,6 +11,7 @@ rmdir love2d /q/s 2>nul
 rmdir defold /q/s 2>nul
 rmdir solar2d /q/s 2>nul
 rmdir tiled /q/s 2>nul
+rmdir resource_hacker /q/s 2>nul
 rmdir aseprite /q/s 2>nul
 rmdir libresprite /q/s 2>nul
 rmdir memaospritecreator /q/s 2>nul

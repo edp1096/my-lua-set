@@ -23,6 +23,7 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
     * install_luajit.ps1 - Install LuaJIT
     * install_love2d.ps1 - Install Love2D
     * install_tiled.ps1 - Install Tiled
+    * install_resource_hacker.ps1 - Install ResourceHacker
 * Vscode, Git
     * install_update_vscode_git.ps1 - Install vscode, git. Update vscode
     * run_vscode.cmd - Run vscode
