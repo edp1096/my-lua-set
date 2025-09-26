@@ -64,15 +64,15 @@
     "window.commandCenter": false,
     "launcher.commands": [
         {
-            "description": "Run Love2d",
+            "description": "Run Love2D",
             "executable": "love.exe",
             "parameters": ".",
             "startIn": "%workspace%"
         },
         {
-            "description": "Run Love2d at src",
-            "executable": "love.exe",
-            "parameters": "src",
+            "description": "Pack current Love2D game to dist",
+            "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "parameters": "pack_love2d_game.ps1",
             "startIn": "%workspace%"
         },
         {
