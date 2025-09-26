@@ -30,6 +30,10 @@ if exist lua (
     set LUA_INCLUDE_DIR=%cd%\lua\include
     set LUA_LIBRARIES=%cd%\lua\lib
 )
+if exist luajit (
+    set PATH=%cd%\luajit\bin;%PATH%
+    set LUA_PATH=%cd%\luajit\share\luajit-2.1\?.lua;%LUA_PATH%
+)
 if exist love2d (
     set PATH=%cd%\love2d;%PATH%
 )
@@ -47,6 +51,9 @@ if exist aseprite (
 )
 if exist libresprite (
     set PATH=%cd%\libresprite;%PATH%
+)
+if exist memaospritecreator (
+    set PATH=%cd%\memaospritecreator;%PATH%
 )
 
 

@@ -1,4 +1,4 @@
-Scripts for portable Lua working set creation on Windows
+Scripts for portable Lua working set creation on MS-Windows
 
 ## Installation
 ```powershell
@@ -16,13 +16,13 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
 
 ## Scripts for installation
 * MinGW
-    * install_mingw.ps1 - Install [MinGW](https://github.com/brechtsanders/winlibs_mingw) UCRT
+    * install_mingw.ps1 - Install [MinGW](https://github.com/brechtsanders/winlibs_mingw)
 * Lua
     * install_lua.ps1 - Install Lua
     * install_luarocks.ps1 - Install LuaRocks
+    * install_luajit.ps1 - Install LuaJIT
     * install_love2d.ps1 - Install Love2D
-    * install_defold.ps1 - Install Defold
-    * install_libresprite.ps1 - Install LibreSprite
+    * install_tiled.ps1 - Install Tiled
 * Vscode, Git
     * install_update_vscode_git.ps1 - Install vscode, git. Update vscode
     * run_vscode.cmd - Run vscode
@@ -33,5 +33,5 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
 * my_cmd - Place your scripts or executable files here
 
 ## Note
-* Environment paths - vscode runs with the environment variables changed. See `run_vscode.cmd`
+* Environment paths - vscode runs with the environment variables eg. `AppData`, `Home`, `UserProfile` are changed. See `run_vscode.cmd`
 * After vscode run, press `Shift+F2` for tool execution.

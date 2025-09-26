@@ -1,10 +1,14 @@
 /home
 /lua
+/luajit
 /love2d
+/love2d_*
 /defold
+/solar2d
 /tiled
 /aseprite
 /libresprite
+/memaospritecreator
 /git
 /mingw
 /cmake
