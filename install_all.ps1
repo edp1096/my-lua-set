@@ -9,7 +9,7 @@ write-output "Love2D" ; .\install_love2d.ps1
 write-output "Tiled" ; .\install_tiled.ps1
 write-output "ResourceHacker" ; .\install_resource_hacker.ps1
 
-# write-output "LibreSrite" ; .\install_libresprite.ps1
+# write-output "LibreSprite" ; .\install_libresprite.ps1
 # write-output "Defold" ; .\install_defold.ps1
 # write-output "Solar2D" ; .\install_solar2d.ps1
 
