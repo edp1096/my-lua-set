@@ -1,3 +1,4 @@
+:: Not use
 :: Source: http://lua-users.org/wiki/BuildingLuaInWindowsForNewbies
 
 @echo off

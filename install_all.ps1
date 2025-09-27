@@ -6,6 +6,7 @@ write-output "LuaRocks" ; .\install_luarocks.ps1
 write-output "LuaJIT" ; .\install_luajit.ps1 # Since clone is the only way, Git is necessary
 
 write-output "Love2D" ; .\install_love2d.ps1
+write-output "Lovr" ; .\install_lovr.ps1
 write-output "Tiled" ; .\install_tiled.ps1
 write-output "ResourceHacker" ; .\install_resource_hacker.ps1
 

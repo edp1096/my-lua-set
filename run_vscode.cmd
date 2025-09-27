@@ -37,6 +37,9 @@ if exist luajit (
 if exist love2d (
     set PATH=%cd%\love2d;%PATH%
 )
+if exist lovr (
+    set PATH=%cd%\lovr;%PATH%
+)
 if exist defold (
     set PATH=%cd%\defold;%PATH%
 )

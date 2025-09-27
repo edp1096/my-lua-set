@@ -47,5 +47,7 @@ $env:NODE_NO_WARNINGS = 1
 bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension vscode-icons-team.vscode-icons
 bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension sumneko.lua
 bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension ilich8086.launcher
+bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension actboy168.lua-debug
+bin\code.cmd --extensions-dir .\data\extension --user-data-dir .\data\user-data --install-extension formulahendry.code-runner
 $env:NODE_NO_WARNINGS = 0
 cd ..

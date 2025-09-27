@@ -8,6 +8,7 @@ rmdir cmake /q/s 2>nul
 rmdir lua /q/s 2>nul
 rmdir luajit /q/s 2>nul
 rmdir love2d /q/s 2>nul
+rmdir lovr /q/s 2>nul
 rmdir defold /q/s 2>nul
 rmdir solar2d /q/s 2>nul
 rmdir tiled /q/s 2>nul
