@@ -1,6 +1,6 @@
 param(
     [string]$ExePath = "game.exe",
-    [string]$IcoPath = "game-icon.ico",
+    [string]$IcoPath = "icon.ico",
     [switch]$h,
     [switch]$Help
 )
@@ -9,25 +9,25 @@ param(
 function Show-Help {
     Write-Host @"
 
-apply_icon_with_reshacker.ps1 - Apply ICO to EXE using Resource Hacker CLI
+create_game_dist_icon.ps1 - Apply ICO to EXE using Resource Hacker CLI
 
 USAGE:
-    .\apply_icon_with_reshacker.ps1 [OPTIONS]
+    .\create_game_dist_icon.ps1 [OPTIONS]
 
 OPTIONS:
     -ExePath <path>    Target EXE file path (default: game.exe)
-    -IcoPath <path>    Source ICO file path (default: game-icon.ico)
+    -IcoPath <path>    Source ICO file path (default: icon.ico)
     -h, -Help          Show this help message
 
 EXAMPLES:
     # Use default files
-    .\apply_icon_with_reshacker.ps1
+    .\create_game_dist_icon.ps1
 
     # Specify custom files
-    .\apply_icon_with_reshacker.ps1 -ExePath "MyGame.exe" -IcoPath "my-icon.ico"
+    .\create_game_dist_icon.ps1 -ExePath "MyGame.exe" -IcoPath "my-icon.ico"
 
     # Full path example
-    .\apply_icon_with_reshacker.ps1 -ExePath "dist\MyGame.exe" -IcoPath "assets\icon.ico"
+    .\create_game_dist_icon.ps1 -ExePath "dist\MyGame.exe" -IcoPath "assets\icon.ico"
 
 REQUIREMENTS:
     - ResourceHacker.exe (or ResHacker.exe) must be in PATH or current directory
@@ -35,7 +35,8 @@ REQUIREMENTS:
 
 DESCRIPTION:
     This script applies an ICO file to an EXE file using Resource Hacker CLI.
-    It tries both modern and legacy Resource Hacker syntax for compatibility.
+    It tries multiple icon group IDs and both modern and legacy Resource Hacker syntax
+    for maximum compatibility with Love2D games and other executables.
 
 "@
 }
@@ -103,77 +104,84 @@ function Set-ExecutableIcon {
     $absoluteExePath = (Resolve-Path $ExePath).Path
     $absoluteIcoPath = (Resolve-Path $IcoPath).Path
     
-    # Try modern Resource Hacker syntax first
-    Write-Info "`n=== Trying Modern Syntax ==="
-    Write-Info "Command: -open `"$absoluteExePath`" -save `"$absoluteExePath`" -action addoverwrite -res `"$absoluteIcoPath`" -mask ICONGROUP,MAINICON,"
+    # Try different icon group IDs commonly used in Love2D and other executables
+    $iconGroupIds = @("MAINICON", "1", "2000", "101", "128", "32512")
     
-    try {
-        $processInfo = New-Object System.Diagnostics.ProcessStartInfo
-        $processInfo.FileName = $resourceHackerPath
-        $processInfo.Arguments = "-open `"$absoluteExePath`" -save `"$absoluteExePath`" -action addoverwrite -res `"$absoluteIcoPath`" -mask ICONGROUP,MAINICON,"
-        $processInfo.UseShellExecute = $false
-        $processInfo.RedirectStandardOutput = $true
-        $processInfo.RedirectStandardError = $true
-        $processInfo.CreateNoWindow = $true
+    foreach ($iconId in $iconGroupIds) {
+        Write-Info "`n=== Trying Icon Group: $iconId ==="
         
-        $process = [System.Diagnostics.Process]::Start($processInfo)
-        $process.WaitForExit()
-        
-        $stdout = $process.StandardOutput.ReadToEnd()
-        $stderr = $process.StandardError.ReadToEnd()
-        $exitCode = $process.ExitCode
-        
-        Write-Info "Exit code: $exitCode"
-        if ($stdout) { Write-Info "Output: $stdout" }
-        if ($stderr) { Write-Info "Error output: $stderr" }
-        
-        if ($exitCode -eq 0) {
-            Write-Success "✅ Icon successfully applied using modern syntax!"
-            return $true
-        } else {
-            Write-Warning "Modern syntax failed, trying legacy syntax..."
+        # Try modern Resource Hacker syntax first
+        Write-Info "Trying modern syntax with ICONGROUP,$iconId,0..."
+        try {
+            $processInfo = New-Object System.Diagnostics.ProcessStartInfo
+            $processInfo.FileName = $resourceHackerPath
+            $processInfo.Arguments = "-open `"$absoluteExePath`" -save `"$absoluteExePath`" -action addoverwrite -res `"$absoluteIcoPath`" -mask ICONGROUP,$iconId,0"
+            $processInfo.UseShellExecute = $false
+            $processInfo.RedirectStandardOutput = $true
+            $processInfo.RedirectStandardError = $true
+            $processInfo.CreateNoWindow = $true
+            
+            $process = [System.Diagnostics.Process]::Start($processInfo)
+            $process.WaitForExit()
+            
+            $stdout = $process.StandardOutput.ReadToEnd()
+            $stderr = $process.StandardError.ReadToEnd()
+            $exitCode = $process.ExitCode
+            
+            Write-Info "Exit code: $exitCode"
+            if ($stdout) { Write-Info "Output: $stdout" }
+            if ($stderr) { Write-Info "Error output: $stderr" }
+            
+            if ($exitCode -eq 0) {
+                Write-Success "Icon successfully applied using modern syntax with ICONGROUP,$iconId,0!"
+                return $true
+            }
+            
+        } catch {
+            Write-Info "Modern syntax failed: $($_.Exception.Message)"
         }
         
-    } catch {
-        Write-Warning "Modern syntax execution failed: $($_.Exception.Message)"
-    }
-    
-    # Try legacy Resource Hacker syntax
-    Write-Info "`n=== Trying Legacy Syntax ==="
-    Write-Info "Command: -modify `"$absoluteExePath`", `"$absoluteExePath`", `"$absoluteIcoPath`", ICONGROUP, MAINICON, 0"
-    
-    try {
-        $processInfo = New-Object System.Diagnostics.ProcessStartInfo
-        $processInfo.FileName = $resourceHackerPath
-        $processInfo.Arguments = "-modify `"$absoluteExePath`", `"$absoluteExePath`", `"$absoluteIcoPath`", ICONGROUP, MAINICON, 0"
-        $processInfo.UseShellExecute = $false
-        $processInfo.RedirectStandardOutput = $true
-        $processInfo.RedirectStandardError = $true
-        $processInfo.CreateNoWindow = $true
-        
-        $process = [System.Diagnostics.Process]::Start($processInfo)
-        $process.WaitForExit()
-        
-        $stdout = $process.StandardOutput.ReadToEnd()
-        $stderr = $process.StandardError.ReadToEnd()
-        $exitCode = $process.ExitCode
-        
-        Write-Info "Exit code: $exitCode"
-        if ($stdout) { Write-Info "Output: $stdout" }
-        if ($stderr) { Write-Info "Error output: $stderr" }
-        
-        if ($exitCode -eq 0) {
-            Write-Success "✅ Icon successfully applied using legacy syntax!"
-            return $true
-        } else {
-            Write-Error "❌ Legacy syntax also failed (exit code: $exitCode)"
-            return $false
+        # Try legacy Resource Hacker syntax
+        Write-Info "Trying legacy syntax with ICONGROUP,$iconId,0..."
+        try {
+            $processInfo = New-Object System.Diagnostics.ProcessStartInfo
+            $processInfo.FileName = $resourceHackerPath
+            $processInfo.Arguments = "-modify `"$absoluteExePath`", `"$absoluteExePath`", `"$absoluteIcoPath`", ICONGROUP, $iconId, 0"
+            $processInfo.UseShellExecute = $false
+            $processInfo.RedirectStandardOutput = $true
+            $processInfo.RedirectStandardError = $true
+            $processInfo.CreateNoWindow = $true
+            
+            $process = [System.Diagnostics.Process]::Start($processInfo)
+            $process.WaitForExit()
+            
+            $stdout = $process.StandardOutput.ReadToEnd()
+            $stderr = $process.StandardError.ReadToEnd()
+            $exitCode = $process.ExitCode
+            
+            Write-Info "Exit code: $exitCode"
+            if ($stdout) { Write-Info "Output: $stdout" }
+            if ($stderr) { Write-Info "Error output: $stderr" }
+            
+            if ($exitCode -eq 0) {
+                Write-Success "Icon successfully applied using legacy syntax with ICONGROUP,$iconId,0!"
+                return $true
+            }
+            
+        } catch {
+            Write-Info "Legacy syntax failed: $($_.Exception.Message)"
         }
         
-    } catch {
-        Write-Error "❌ Legacy syntax execution failed: $($_.Exception.Message)"
-        return $false
+        Write-Warning "Icon Group $iconId failed, trying next..."
     }
+    
+    Write-Error "All icon group IDs failed!"
+    Write-Info "Manual solution:"
+    Write-Info "  1. Open Resource Hacker GUI"
+    Write-Info "  2. Open: $absoluteExePath"
+    Write-Info "  3. Look at Icon Group folder to see existing IDs"
+    Write-Info "  4. Use Action > Replace Icon to manually replace"
+    return $false
 }
 
 Write-Host "Resource Hacker Icon Applicator" -ForegroundColor Magenta
@@ -195,13 +203,13 @@ if (-not (Test-Path $IcoPath)) {
 
 # Apply icon
 if (Set-ExecutableIcon $ExePath $IcoPath) {
-    Write-Success "`n🎉 Icon application completed successfully!"
+    Write-Success "`nIcon application completed successfully!"
     Write-Info "You can verify the icon by:"
     Write-Info "  - Right-clicking the EXE and checking Properties"
     Write-Info "  - Opening the EXE in Resource Hacker GUI"
     Write-Info "  - Checking Windows Explorer (may need to refresh icon cache)"
 } else {
-    Write-Error "`n💥 Icon application failed!"
+    Write-Error "`nIcon application failed!"
     Write-Info "Manual solution: Open Resource Hacker GUI and use Action > Replace Icon"
     exit 1
 }

@@ -375,6 +375,11 @@ if (-not (Copy-Love2DDlls $Love2DDir $DistDir)) {
     exit 1
 }
 
+# Set application icon
+create_icon_from_png.ps1
+create_game_dist_icon.ps1 -ExePath $exeFilePath
+
+# Final summary
 Write-Info "`n========== Final Summary =========="
 Write-Info "Compile directory: $CompileDir (compiled game files)"
 Write-Success "Distribution package: $DistDir"
