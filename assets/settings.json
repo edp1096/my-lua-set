@@ -81,6 +81,11 @@
             "startIn": "%workspace%"
         },
         {
+            "description": "Run Defold",
+            "executable": "defold.exe",
+            "startIn": "%workspace%"
+        },
+        {
             "description": "Run Tiled",
             "executable": "tiled.exe",
             "startIn": "%workspace%"
@@ -93,11 +98,6 @@
         // {
         //     "description": "Run Libreprite",
         //     "executable": "libresprite.exe",
-        //     "startIn": "%workspace%"
-        // },
-        // {
-        //     "description": "Run Defold",
-        //     "executable": "defold.exe",
         //     "startIn": "%workspace%"
         // },
     ]

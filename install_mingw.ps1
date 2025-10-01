@@ -1,12 +1,14 @@
 $uri = "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases"
 $json = Invoke-WebRequest -UseBasicParsing -Uri $uri | ConvertFrom-Json
 
-# Find first release that has ucrt asset
+
+# Find first release that has the specified runtime asset
+$runtimeVersion = "msvcrt"
 foreach ($release in $json) {
     $asset = $release.assets | Where-Object {
         $_.name -match "posix-seh" -and $_.name -match ".zip" -and
         $_.name -notmatch "llvm" -and $_.name -notmatch ".sha" -and
-        $_.name -match "ucrt"
+        $_.name -match $runtimeVersion
     }
     if ($asset) {
         break
