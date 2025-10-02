@@ -34,6 +34,9 @@ if exist luajit (
     set PATH=%cd%\luajit\bin;%PATH%
     set LUA_PATH=%cd%\luajit\share\luajit-2.1\?.lua;%LUA_PATH%
 )
+if exist iup (
+    set PATH=%cd%\iup\bin;%PATH%
+)
 if exist love2d (
     set PATH=%cd%\love2d;%PATH%
 )

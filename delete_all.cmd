@@ -7,6 +7,7 @@ rmdir mingw /q/s 2>nul
 rmdir cmake /q/s 2>nul
 rmdir lua /q/s 2>nul
 rmdir luajit /q/s 2>nul
+rmdir iup /q/s 2>nul
 rmdir love2d /q/s 2>nul
 rmdir lovr /q/s 2>nul
 rmdir defold /q/s 2>nul
