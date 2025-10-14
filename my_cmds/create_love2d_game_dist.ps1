@@ -6,8 +6,10 @@ param(
 $SourceDir = "."
 $CompileDir = "compile"
 $DistDir = "dist"
-$LoveExePath = "../../love2d/love.exe"
-$Love2DDir = "../../love2d"
+# $LoveExePath = "../../love2d/love.exe"
+$LoveExePath = "$env:VSCODE_PORTABLE/../../love2d/love.exe"
+# $Love2DDir = "../../love2d"
+$Love2DDir = "$env:VSCODE_PORTABLE/../../love2d"
 $ExcludePatterns = @("*.git*", "build*.ps1", "compile", "dist", "*.tmp", "*.bak", "*.tmx")
 $ExcludeFiles = @()
 $CleanDist = $true
