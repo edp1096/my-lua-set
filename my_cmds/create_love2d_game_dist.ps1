@@ -10,7 +10,7 @@ $DistDir = "dist"
 $LoveExePath = "$env:VSCODE_PORTABLE/../../love2d/love.exe"
 # $Love2DDir = "../../love2d"
 $Love2DDir = "$env:VSCODE_PORTABLE/../../love2d"
-$ExcludePatterns = @("*.git*", ".claude", ".vscode", "build*.ps1", "compile", "dist", "docs", "*.tmp", "*.bak", "*.tmx")
+$ExcludePatterns = @("*.git*", ".claude", ".vscode", "build*.ps1", "compile", "dist", "docs", "web", "*.md", "*.tmp", "*.bak", "*.tmx")
 $ExcludeFiles = @()
 $CleanDist = $true
 $Verbose = $false
@@ -173,28 +173,118 @@ function Process-Directory {
     }
 }
 
-# Create .love file (zip archive)
+# Create web-compatible .love file (source files only, no compilation)
+function New-WebLoveFile {
+    param(
+        [string]$SourceDirectory,
+        [string]$OutputPath
+    )
+
+    Write-Host "Creating web-compatible .love file (source code)..." -ForegroundColor Cyan
+
+    try {
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+        if (Test-Path $OutputPath) {
+            Remove-Item $OutputPath -Force
+        }
+
+        # Create zip with optimal compression
+        $zip = [System.IO.Compression.ZipFile]::Open($OutputPath, 'Create')
+
+        try {
+            # Get all files recursively from source
+            $files = Get-ChildItem -Path $SourceDirectory -Recurse -File
+
+            $addedCount = 0
+            foreach ($file in $files) {
+                # Get relative path from source directory
+                $relativePath = $file.FullName.Substring($SourceDirectory.Length + 1)
+
+                # Check if should be excluded
+                if (Test-ShouldExclude $file $relativePath) {
+                    continue
+                }
+
+                # IMPORTANT: Convert backslashes to forward slashes for LÖVE
+                $zipPath = $relativePath.Replace('\', '/')
+
+                # Add file with optimal compression
+                $entry = $zip.CreateEntry($zipPath, [System.IO.Compression.CompressionLevel]::Optimal)
+
+                # Write file content
+                $entryStream = $entry.Open()
+                $fileStream = [System.IO.File]::OpenRead($file.FullName)
+                $fileStream.CopyTo($entryStream)
+                $fileStream.Close()
+                $entryStream.Close()
+
+                $addedCount++
+            }
+
+            Write-Host "Created web .love file: $OutputPath ($addedCount files)" -ForegroundColor Green
+            return $true
+        }
+        finally {
+            $zip.Dispose()
+        }
+    }
+    catch {
+        Write-Host "Failed to create web .love file: $($_.Exception.Message)" -ForegroundColor Red
+        return $false
+    }
+}
+
+# Create .love file from compiled bytecode (for distribution)
 function New-LoveFile {
     param(
         [string]$SourceDirectory,
         [string]$OutputPath
     )
-    
-    Write-Info "Creating .love file..."
-    
+
+    Write-Host "Creating .love file (compiled)..." -ForegroundColor Cyan
+
     try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
-        
+
         if (Test-Path $OutputPath) {
             Remove-Item $OutputPath -Force
         }
-        
-        [System.IO.Compression.ZipFile]::CreateFromDirectory($SourceDirectory, $OutputPath)
-        Write-Success "Created .love file: $OutputPath"
-        return $true
+
+        # Create zip with optimal compression
+        $zip = [System.IO.Compression.ZipFile]::Open($OutputPath, 'Create')
+
+        try {
+            # Get all files recursively
+            $files = Get-ChildItem -Path $SourceDirectory -Recurse -File
+
+            foreach ($file in $files) {
+                # Get relative path from source directory
+                $relativePath = $file.FullName.Substring($SourceDirectory.Length + 1)
+
+                # IMPORTANT: Convert backslashes to forward slashes for LÖVE
+                $zipPath = $relativePath.Replace('\', '/')
+
+                # Add file with optimal compression
+                $entry = $zip.CreateEntry($zipPath, [System.IO.Compression.CompressionLevel]::Optimal)
+
+                # Write file content
+                $entryStream = $entry.Open()
+                $fileStream = [System.IO.File]::OpenRead($file.FullName)
+                $fileStream.CopyTo($entryStream)
+                $fileStream.Close()
+                $entryStream.Close()
+            }
+
+            Write-Host "Created .love file: $OutputPath" -ForegroundColor Green
+            return $true
+        }
+        finally {
+            $zip.Dispose()
+        }
     }
     catch {
-        Write-Error "Failed to create .love file: $($_.Exception.Message)"
+        Write-Host "Failed to create .love file: $($_.Exception.Message)" -ForegroundColor Red
         return $false
     }
 }
@@ -323,7 +413,25 @@ if ($CleanDist) {
     }
 }
 
-Write-Info "Starting build process..."
+# Create web directory if it doesn't exist
+$webDir = Join-Path $SourceDir "web"
+if (-not (Test-Path $webDir)) {
+    Write-Info "Creating web directory..."
+    New-Item -ItemType Directory -Path $webDir -Force | Out-Null
+}
+
+# Create web-compatible .love file BEFORE compilation
+Write-Info "`n========== Creating Web Build =========="
+$webLoveFile = Join-Path $webDir "game.love"
+if (New-WebLoveFile $SourceDir $webLoveFile) {
+    $webFileSize = (Get-Item $webLoveFile).Length
+    Write-Success "Web build created: $webLoveFile"
+    Write-Info "  Size: $([math]::Round($webFileSize / 1MB, 2)) MB (source files, web-compatible)"
+} else {
+    Write-Error "Failed to create web build (non-fatal, continuing...)"
+}
+
+Write-Info "`n========== Starting Compilation =========="
 
 $startTime = Get-Date
 $result = Process-Directory $SourceDir $CompileDir $SourceDir
@@ -383,11 +491,15 @@ create_game_dist_icon.ps1 -ExePath $exeFilePath
 
 # Final summary
 Write-Info "`n========== Final Summary =========="
+Write-Success "Web build: $webDir"
+Write-Info "  - game.love (web-compatible, source files)"
+Write-Info ""
 Write-Info "Compile directory: $CompileDir (compiled game files)"
 Write-Success "Distribution package: $DistDir"
-Write-Info "  - $GameName.love (Love2D game file)"
-Write-Info "  - $GameName.exe (standalone executable)"  
+Write-Info "  - $GameName.love (compiled bytecode for .exe)"
+Write-Info "  - $GameName.exe (standalone executable)"
 Write-Info "  - *.dll (Love2D runtime libraries)"
 Write-Info "=========================================="
-Write-Success "Distribution packaging completed!"
-Write-Info "You can distribute the entire 'dist' folder."
+Write-Success "Build completed!"
+Write-Info "Desktop: Distribute the 'dist' folder"
+Write-Info "Web: Deploy the 'web' folder to your web server"
