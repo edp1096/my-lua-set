@@ -12,9 +12,9 @@ Scripts for portable Lua working set creation on MS-Windows
     ```
 
 ## Run
-After installation, you will see a shortcut on Windows Desktop. Just run it and write Lua code in vscode.
+* After installation, you will see a shortcut on Windows Desktop. Just run it and write Lua code in vscode.
 
-## Scripts for installation
+## Scripts for tools installation
 * MinGW
     * install_mingw.ps1 - Install [MinGW](https://github.com/brechtsanders/winlibs_mingw)
 * Lua
@@ -36,4 +36,4 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
 
 ## Note
 * Environment paths - vscode runs with the environment variables eg. `AppData`, `Home`, `UserProfile` are changed. See `run_vscode.cmd`
-* After vscode run, press `Shift+F2` for tool execution.
+* After vscode run, press `Shift+F2` to run tools.
