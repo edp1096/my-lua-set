@@ -9,6 +9,7 @@
 /solar2d
 /tiled
 /resource_hacker
+/paintdotnet
 /aseprite
 /libresprite
 /memaospritecreator
@@ -28,3 +29,5 @@
 !/playground/audio_player
 
 sed.exe
+
+.claude

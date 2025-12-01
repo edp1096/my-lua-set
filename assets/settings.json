@@ -90,6 +90,11 @@
             "executable": "tiled.exe",
             "startIn": "%workspace%"
         },
+        {
+            "description": "Run Paint.Net",
+            "executable": "paintdotnet.exe",
+            "startIn": "%workspace%"
+        },
         // {
         //     "description": "Run Aseprite",
         //     "executable": "aseprite.exe",

@@ -3,12 +3,13 @@ write-output "CMake" ; .\install_cmake.ps1
 write-output "vscode, git" ; .\install_update_vscode_git.ps1
 write-output "Lua" ; .\install_lua.ps1
 write-output "LuaRocks" ; .\install_luarocks.ps1
-write-output "LuaJIT" ; .\install_luajit.ps1 # Since clone is the only way, Git is necessary
+write-output "LuaJIT" ; .\install_luajit.ps1 # Since 'git clone' is the only way by rolling release so, Git is necessary
 write-output "IUP" ; .\install_iup.ps1
 
 write-output "Love2D" ; .\install_love2d.ps1
 write-output "Tiled" ; .\install_tiled.ps1
 write-output "ResourceHacker" ; .\install_resource_hacker.ps1
+write-output "Paint.NET" ; .\install_paintdotnet.ps1
 
 # write-output "LibreSprite" ; .\install_libresprite.ps1
 # write-output "Defold" ; .\install_defold.ps1

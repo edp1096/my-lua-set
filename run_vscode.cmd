@@ -55,8 +55,11 @@ if exist tiled (
 if exist resource_hacker (
     set PATH=%cd%\resource_hacker;%PATH%
 )
+if exist paintdotnet (
+    set PATH=%cd%\resource_hacker;%PATH%
+)
 if exist aseprite (
-    set PATH=%cd%\aseprite;%PATH%
+    set PATH=%cd%\paintdotnet;%PATH%
 )
 if exist libresprite (
     set PATH=%cd%\libresprite;%PATH%

@@ -18,12 +18,13 @@ After installation, you will see a shortcut on Windows Desktop. Just run it and 
 * MinGW
     * install_mingw.ps1 - Install [MinGW](https://github.com/brechtsanders/winlibs_mingw)
 * Lua
-    * install_lua.ps1 - Install Lua
-    * install_luarocks.ps1 - Install LuaRocks
-    * install_luajit.ps1 - Install LuaJIT
-    * install_love2d.ps1 - Install Love2D
-    * install_tiled.ps1 - Install Tiled
-    * install_resource_hacker.ps1 - Install ResourceHacker
+    * install_lua.ps1
+    * install_luarocks.ps1
+    * install_luajit.ps1
+    * install_love2d.ps1
+    * install_tiled.ps1
+    * install_resource_hacker.ps1
+    * install_paintdotnet.ps1
 * Vscode, Git
     * install_update_vscode_git.ps1 - Install vscode, git. Update vscode
     * run_vscode.cmd - Run vscode
