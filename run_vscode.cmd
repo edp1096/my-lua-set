@@ -16,6 +16,9 @@ set GIT_CEILING_DIRECTORIES=%cd%\playground
 set PATH=%cd%\my_cmds;%cd%\bin;C:\Windows;C:\Windows\System;C:\Windows\System32
 set PATH=%cd%\git;%cd%\git\cmd;%cd%\git\mingw64\bin;%cd%\git\usr\bin;%PATH%
 
+if exist nodejs (
+    set PATH=%cd%\nodejs;%PATH%
+)
 if exist mingw (
     set PATH=%cd%\mingw\mingw64\bin;%cd%\mingw\mingw64\x86_64-w64-mingw32\bin;%PATH%
 )
